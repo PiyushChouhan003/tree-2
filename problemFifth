@@ -1,0 +1,71 @@
+Question --> https://www.interviewbit.com/problems/vertical-order-traversal-of-binary-tree/
+
+public class Solution {
+    public int[][] verticalOrderTraversal(TreeNode A) {
+        
+        if(A==null)
+        return new int[0][0];
+        ArrayList<ArrayList<Integer>> result = new ArrayList();
+        
+        int lev1=vertical(A,0);
+        
+        int rootLev=0-(lev1);
+        //System.out.println(rootLev);
+        for(int i=0;i<=rootLev;i++){
+            result.add(new ArrayList<Integer>());
+        }
+        
+        ArrayList<TreeNode> queue=new ArrayList();
+        ArrayList<Integer> lev=new ArrayList();
+        queue.add(A);
+        lev.add(rootLev);
+        while(queue.size()!=0){
+            TreeNode temp=queue.get(0);
+            queue.remove(0);
+            int level=lev.get(0);
+            lev.remove(0);
+            if(result.size()==level){
+                result.add(new ArrayList<Integer>());
+            }
+            result.get(level).add(temp.val);
+            
+            if(temp.left!=null){
+                queue.add(temp.left);
+                lev.add(level-1);
+            }
+            if(temp.right!=null){
+                queue.add(temp.right);
+                lev.add(level+1);
+            }
+            
+        }
+        int verticalLev=result.size();
+        int[][] res=new int[verticalLev][];
+        for(int i=0;i<result.size();i++){
+            ArrayList<Integer> b=result.get(i);
+            int bsize=b.size();
+            res[i]=new int[bsize];
+            for(int j=0;j<bsize;j++){
+                res[i][j]=b.get(j);
+            }
+        }
+        return res;
+        
+        
+        
+    }
+    
+    public int vertical(TreeNode A, int verticalLev){
+        int leftLev=verticalLev,rightLev=verticalLev;
+        if(A.left==null && A.right==null)
+            return verticalLev;
+        if(A.left!=null){
+            leftLev=vertical(A.left,verticalLev-1);
+        }
+        if(A.right!=null){
+            rightLev=vertical(A.right, verticalLev+1);
+        }
+        
+        return  Math.min(leftLev,rightLev);
+    }
+}
